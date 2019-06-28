@@ -4,7 +4,9 @@
   "description": "parkhour server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha --sort --exit ",
+    "start": "node server.js",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,24 @@
   "bugs": {
     "url": "https://github.com/parkhour/server/issues"
   },
-  "homepage": "https://github.com/parkhour/server#readme"
+  "homepage": "https://github.com/parkhour/server#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "lusca": "^1.6.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.1",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "chalk": "^2.4.2",
+    "dotenv": "^8.0.0",
+    "mocha": "^6.1.4"
+  }
 }
