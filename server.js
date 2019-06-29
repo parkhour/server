@@ -55,7 +55,7 @@ app.use(lusca.referrerPolicy('origin'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-if(process.env.NODE_ENV === 'development') {
+if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   app.use(logger);
 } else {
   app.use(morgan('dev'));
@@ -70,3 +70,5 @@ app.listen(port, () => {
     console.log('Server is running on port', port);
   };
 });
+
+module.exports = app;

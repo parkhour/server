@@ -1,8 +1,9 @@
 const express = require('express');
+const { errorHandler } = require('../middlewares/errorhandler');
+const entryRoute = require('./entry');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({message: 'Hello World'});
-})
+router.use('/', entryRoute);
+router.use(errorHandler);
 
 module.exports = router;
