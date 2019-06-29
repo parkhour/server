@@ -17,6 +17,7 @@ const port = process.env.PORT || 3000;
 const mainRoute = require('./routes/web');
 
 mongoose.connect(dbURL, { useNewUrlParser: true });
+/* istanbul ignore next */
 mongoose.connection.on('error', (error) => {
   console.log(error);
   console.log('Please make sure MongoDB is running');
@@ -55,14 +56,15 @@ app.use(lusca.referrerPolicy('origin'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+/* istanbul ignore else  */
 if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   app.use(logger);
 } else {
   app.use(morgan('dev'));
-};
+}
 
 app.use('/', mainRoute);
-
+/* istanbul ignore else  */
 app.listen(port, () => {
   if(process.env.NODE_ENV === 'development') {
     console.log(chalk.white(`Server is listening on port: ${chalk.white.bold(port)}\ntime: ${chalk.white.bold(moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a'))}`));

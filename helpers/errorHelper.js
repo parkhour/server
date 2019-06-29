@@ -9,11 +9,14 @@ const nodeError = [
   'URIError'
 ];
 const mongooseClientError = ['CastError', 'ValidatorError', 'ValidationError'];
+const jwtError = ['JsonWebTokenError'];
 
 const errorCode = errorMessage => {
   switch (errorMessage) {
     case 'Email/password cannot be empty':
       return 400;
+    case 'User not found':
+      return 401;
     default:
       return 500;
   }
@@ -22,7 +25,7 @@ const errorCode = errorMessage => {
 const handler = error => {
   let code;
   const errorObj = {};
-
+ /* istanbul ignore else  */
   if (typeof error.code === 'string') {
     errorObj.message = error.message;
     if (
@@ -35,14 +38,20 @@ const handler = error => {
     errorObj.message = error.message;
     code = errorCode(error.message);
   }
-  //  else if (mongooseClientError.includes(error.name)) {
-  //   errorObj.message = error.message
-  //     ? error.message
-  //     : 'We can\'t process your request';
-  //   code = 400;
-  // } 
+  else if (jwtError.includes(error.name)) {
+    if(error.message === 'jwt malformed') {
+      errorObj.message = 'Bad request, please login again'
+    }
+    code = 400;
+  }
+   else if (mongooseClientError.includes(error.name)) {
+    errorObj.message = error.message
+      ? error.message
+      : 'We can\'t process your request';
+    code = 400;
+  }
   else {
-    errorObj.message = 'There\'s something wrong in the system';
+    console.log(error, 'ERROR UNKNOWN')
     code = 500;
   }
   errorObj.code = code;

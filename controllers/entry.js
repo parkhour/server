@@ -14,21 +14,18 @@ class EntryController {
     const newUser = new User({
       email,
       password,
+      firebaseId: req.uid,
     });
 
     newUser.save()
       .then((user) => {
         const accessToken = createAccessToken({
-          id: user._id,
-          email: user.email,
+          id: req.uid,
+          email: user.email
         });
 
         res.status(201).json({
           token: accessToken,
-          currentUser: {
-            userId: user._id,
-            email: user.email,
-          },
         });
       })
       .catch(next);
@@ -44,16 +41,12 @@ class EntryController {
       .then((user) => {
         if(user && verifyPassword(password, user.password)) {
           const accessToken = createAccessToken({
-            id: user._id,
+            id: req.uid,
             email: user.email,
           });
 
           res.status(200).json({
             token: accessToken,
-            currentUser: {
-              userId: user._id,
-              email: user.email,
-            },
           });
         }
       })

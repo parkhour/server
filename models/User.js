@@ -3,7 +3,7 @@ const { hashPassword } = require('../helpers/entryHelper');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  username: String,
+  firebaseId: String,
   email: {
     type:String,
     required: [true],

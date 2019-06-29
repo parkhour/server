@@ -1,58 +1,37 @@
-const { auth } = require("../config/firebase");
 const User = require("../models/User");
-
-const { createAccessToken } = require('../helpers/token');
-
-let firstUser = '',
-    secondUser = '',
-    thirdUser = '';
+const { createAccessToken } = require('../helpers/tokenHelper');
+const { auth } = require("../config/firebase");
 
 const randomEmail = () => {
   return `${Math.random().toString(36).substring(5)}@mail.com`;
 };
 
-const createTestUsers = () => {
-  const testUserOne = new User({
-    username: 'userOne',
+const createUserToken = () => {
+  const testUser = {
     email: randomEmail(),
-    password: '123',
-  });
+    password: '123456',
+  };
 
-  const testUserTwo = new User({
-    username: 'userTwo',
-    email: randomEmail(),
-    password: '123',
-  });
-
-  const testUserThree = new User({
-    username: 'userThree',
-    email: randomEmail(),
-    password: '123',
-  });
-
-  const userOne = testUserOne.save(),
-        userTwo = testUserTwo.save(),
-        userThree = testUserThree.save();
-
-  return new Promise((resolve, reject) => {
-    Promise.all([userOne, userTwo, userThree])
-    .then(([userOne, userTwo, userThree]) => {
-      let tokens = [];
-      let userIds = [];
-      let users = [userOne, userTwo, userThree];
-
-      users.forEach((user) => {
-        tokens.push(createAccessToken({
-          id: user._id,
-          email: user.email,
-        }));
-        userIds.push(user._id);
-      });
-      [firstUser, secondUser, thirdUser] = [...userIds];
-      resolve({tokens, userIds});
+  return new Promise((resolve) => {
+    auth
+    .createUserWithEmailAndPassword(testUser.email, testUser.password)
+    .then(({user}) => {
+      const newUser = new User({
+        email: testUser.email,
+        password: testUser.password,
+        firebaseId: user.uid,
+      })
+      return newUser.save()
     })
-  });
-
+    .then((user) => {
+      const token = createAccessToken({
+        id: user.firebaseId,
+        email: user.email,
+      })
+      resolve([token, user.firebaseId]);
+    })
+  })
+  
 };
 
 const dropUsers = done => {
@@ -61,11 +40,11 @@ const dropUsers = done => {
     const user = auth.currentUser;
     return user.delete()
    })
-  .then(() => done());
-
+  .then(() => done())
+  .catch(() => done());
 };
 
 module.exports = {
-  createTestUsers,
+  createUserToken,
   dropUsers,
 };

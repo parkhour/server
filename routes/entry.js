@@ -1,6 +1,6 @@
 const express = require('express');
 const controller = require('../controllers/entry');
-const { firebaseAuth } = require('../middlewares/firebase');
+const { firebaseAuth } = require('../middlewares/firebaseMiddleware');
 
 const {
   postUserLogin,
