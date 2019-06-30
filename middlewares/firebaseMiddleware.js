@@ -1,5 +1,8 @@
-const { auth, db } = require('../config/firebase');
 const moment = require('moment');
+const cron = require('cron');
+const {CronJob } = cron;
+const { auth, db } = require('../config/firebase');
+const { setCronTimer } = require('../helpers/timeHelper');
 
 exports.firebaseAuth = (req, res, next) => {
   const { email, password } = req.body;
@@ -69,6 +72,26 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
    reservationId: _id,
  })
   .then(() => {
+    const jobDate = setCronTimer(new Date(moment(createdAt).valueOf()));
+
+    new CronJob(jobDate, function() {
+      console.log('started a job');
+
+
+      this.stop();
+    }, async function() {
+      await db.ref(`/test/reservations/${_id}`).update({
+          status: 'canceled',
+      });
+
+      await db.ref(`/test/parkingLot/${mallId}/${parkId}`).update({
+        reserved: false,
+        reservationId: '',
+      });
+
+        console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), 'stopped')
+    }, true, 'Asia/Jakarta');
+
     res.status(201).json(req.reservation)
   })
   .catch(next);

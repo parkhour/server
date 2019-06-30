@@ -2,7 +2,7 @@ const { handler } = require('../helpers/errorHelper');
 
 exports.errorHandler = (err, req, res, next) => {
   const error = handler(err);
-  console.trace(error);
+  // console.trace(error);
   const {
     code,
     message,

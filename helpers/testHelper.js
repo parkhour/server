@@ -1,6 +1,7 @@
 const User = require("../models/User");
+const Reservation = require('../models/Reservation');
 const { createAccessToken } = require('../helpers/tokenHelper');
-const { auth } = require("../config/firebase");
+const { auth, db } = require("../config/firebase");
 
 const randomEmail = () => {
   return `${Math.random().toString(36).substring(5)}@mail.com`;
@@ -44,7 +45,44 @@ const dropUsers = done => {
   .catch(() => done());
 };
 
+const dropReservations = (done, userId, reservationId) => {
+  Reservation.deleteMany({})
+    .then(async () => {
+      try {
+        await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
+        await db.ref(`/test/reservations/${reservationId}`).remove();
+        done();
+      }
+      catch(err) {
+        console.log(err);
+      }
+    })
+    .catch(() => { done() })
+};
+
+const dropAll = async (done, userId, reservationId) => {
+  User.deleteMany({}).exec();
+  Reservation.deleteMany({}).exec();
+
+  try {
+    const user = auth.currentUser;
+
+    await user.delete();
+    await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
+    await db.ref(`/test/reservations/${reservationId}`).remove();
+    await db.ref(`/test/user/${userId}`).remove();
+    await db.ref(`/test/parkingLot/01/1`).update({ reserved: false, reservationId: ""});
+    done();
+  }
+  catch(err) {
+    console.log(err);
+  }
+
+}
+
 module.exports = {
   createUserToken,
+  dropReservations,
   dropUsers,
+  dropAll,
 };
