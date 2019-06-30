@@ -37,6 +37,14 @@ exports.firebaseAuth = (req, res, next) => {
     .catch(next);
 };
 
+exports.firebaseSignOut = (req, res, next) => {
+  auth.signOut()
+    .then(() => {
+      next();
+    })
+    .catch(next);
+}
+
 exports.firebaseCreateReservation =  async (req, res, next) => {
   const {
     _id,
@@ -72,27 +80,33 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
    reservationId: _id,
  })
   .then(() => {
-    const jobDate = setCronTimer(new Date(moment(createdAt).valueOf()));
+    const jobDate = setCronTimer(new Date(moment(createdAt).valueOf()), 5);
 
     new CronJob(jobDate, function() {
-      console.log('started a job');
-
-
       this.stop();
     }, async function() {
-      await db.ref(`/test/reservations/${_id}`).update({
+      try{ 
+        const snapshot = await db.ref(`/test/reservations/${_id}`).once('value');
+        const confirmationStatus = snapshot.val().status;
+
+       if(confirmationStatus !== 'confirmation' || confirmationStatus !== 'completed') {
+        await db.ref(`/test/reservations/${_id}`).update({
           status: 'canceled',
-      });
+        });
 
-      await db.ref(`/test/parkingLot/${mallId}/${parkId}`).update({
-        reserved: false,
-        reservationId: '',
-      });
-
-        console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), 'stopped')
+        await db.ref(`/test/parkingLot/${mallId}/${parkId}`).update({
+          reserved: false,
+          reservationId: '',
+        });
+       }
+        
+      } catch(err) {
+        next(err);
+      }
+        console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss", 'job\'s done'));
     }, true, 'Asia/Jakarta');
 
     res.status(201).json(req.reservation)
   })
   .catch(next);
-}
+};

@@ -1,7 +1,9 @@
+/*istanbul ignore file */
 const User = require("../models/User");
 const Reservation = require('../models/Reservation');
 const { createAccessToken } = require('../helpers/tokenHelper');
 const { auth, db } = require("../config/firebase");
+const { adminAuth } = require('../config/admin');
 
 const randomEmail = () => {
   return `${Math.random().toString(36).substring(5)}@mail.com`;
@@ -35,39 +37,24 @@ const createUserToken = () => {
   
 };
 
-const dropUsers = done => {
-  User.deleteMany({})
-  .then(() => {
-    const user = auth.currentUser;
-    return user.delete()
-   })
-  .then(() => done())
-  .catch(() => done());
+const dropUsers = async (done, userId) => {
+  User.deleteMany({}).exec();
+  
+  try {
+    await adminAuth.deleteUser(userId);
+    await db.ref(`/test/user/${userId}`).remove();
+    done();
+  } catch(err) {
+    done();
+  }
 };
-
-// const dropReservations = (done, userId, reservationId) => {
-//   Reservation.deleteMany({})
-//     .then(async () => {
-//       try {
-//         await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
-//         await db.ref(`/test/reservations/${reservationId}`).remove();
-//         done();
-//       }
-//       catch(err) {
-//         console.log(err);
-//       }
-//     })
-//     .catch(() => { done() })
-// };
 
 const dropAll = async (done, userId, reservationId) => {
   User.deleteMany({}).exec();
   Reservation.deleteMany({}).exec();
-
+  
   try {
-    const user = auth.currentUser;
-
-    await user.delete();
+    await adminAuth.deleteUser(userId);
     await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
     await db.ref(`/test/reservations/${reservationId}`).remove();
     await db.ref(`/test/user/${userId}`).remove();
@@ -81,8 +68,8 @@ const dropAll = async (done, userId, reservationId) => {
 }
 
 module.exports = {
+  randomEmail,
   createUserToken,
-  // dropReservations,
   dropUsers,
   dropAll,
 };

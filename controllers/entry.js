@@ -1,6 +1,7 @@
 const User = require('../models/User');
 
 const { createAccessToken } = require('../helpers/tokenHelper');
+// const { verifyPassword } = require('../helpers/entryHelper');
 
 class EntryController {
 
@@ -29,6 +30,7 @@ class EntryController {
 
         res.status(201).json({
           token: accessToken,
+          uid: req.uid,
         });
       })
       .catch(next);
@@ -49,11 +51,16 @@ class EntryController {
 
         res.status(200).json({
           token: accessToken,
+          uid: req.uid,
         });
         
       })
       .catch(next);
   };
+
+  static postUserLogout(req, res, next) {
+    res.status(200).json({ message: 'Logged out' });
+  }
 
 };
 

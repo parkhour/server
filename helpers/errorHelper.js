@@ -15,8 +15,6 @@ const errorCode = errorMessage => {
   switch (errorMessage) {
     case 'Email/password cannot be empty':
       return 400;
-    // case 'User not found':
-    //   return 401;
     default:
       return 500;
   }
@@ -41,7 +39,7 @@ const handler = error => {
   else if (jwtError.includes(error.name)) {
     if(error.message === 'jwt malformed') {
       errorObj.message = 'Bad request, please login again'
-    }
+    } else errorObj.message = error.message;
     code = 400;
   }
    else if (mongooseClientError.includes(error.name)) {
@@ -51,7 +49,8 @@ const handler = error => {
     code = 400;
   }
   else {
-    errorObj.message = 'There\'s something wrong with the server, please try again later' ;
+    errorObj.message = error.message
+    // errorObj.message = 'There\'s something wrong with the server, please try again later' ;
     code = 500;
   }
   errorObj.code = code;

@@ -1,10 +1,9 @@
 const express = require('express');
-const controller = require('../controllers/reservation');
 
 const {
   postCreateReservation,
   getAllReservations,
-} = controller;
+} = require('../controllers/reservation');
 
 const { userAuthentication } = require('../middlewares/authMiddleware');
 const { firebaseCreateReservation } = require('../middlewares/firebaseMiddleware');

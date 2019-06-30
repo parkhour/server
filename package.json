@@ -26,6 +26,7 @@
     "cron": "^1.7.1",
     "express": "^4.17.1",
     "firebase": "^6.2.4",
+    "firebase-admin": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "lusca": "^1.6.1",
     "moment": "^2.24.0",

@@ -9,7 +9,7 @@ const userAuthentication = (req, res, next) => {
       .then((user) => {
         if(user) {
           req.authenticated = decode;
-          return next();
+          next();
         }
       })
       .catch(next)

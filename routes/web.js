@@ -7,6 +7,7 @@ const reservationRoute = require('./reservation');
 
 router.use('/', entryRoute);
 router.use('/reservations', reservationRoute);
+
 router.use(errorHandler);
 
 module.exports = router;

@@ -1,22 +1,53 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../server');
-const testHelper = require('../helpers/testHelper');
-const { dropUsers } = testHelper;
+
+const {
+   dropUsers, 
+   randomEmail
+  } = require('../helpers/testHelper');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 
+let testEmail =  randomEmail();
+let testUserId;
+let testToken;
+
 after(done => {
-  dropUsers(done);
+  dropUsers(done, testUserId);
 });
 
 describe('User test suite', () => {
-  describe('POST /register route test', () => {
+  describe('GET /test', () => {
+    describe('Route error', () => {
+      it('should return error Object with Status Code: 500', done => {
+        chai
+          .request(app)
+          .get('/test')
+          .end(function(err, res){
+            expect(err).to.be.null;
+
+            expect(res).to.have.status(500);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.be.a('string');
+            expect(res.body.message).to.match(
+              /(There\'s something wrong with the server, please try again later)/g
+            );
+
+            done();
+          });
+          
+      })
+    })
+  });
+
+  describe('POST /register', () => {
     describe('User registration', () => {
       it('should return an user Object and Status Code: 201', done => {
         const testUser = {
-          email: 'john@mail.com',
+          email: testEmail,
           password: '123456'
         };
 
@@ -26,11 +57,15 @@ describe('User test suite', () => {
           .send(testUser)
           .end(function(err, res) {
             expect(err).to.be.null;
-
+            console.log(res.body.uid);
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.property('token');
             expect(res.body.token).to.be.a('string');
+            expect(res.body).to.have.property('uid');
+            expect(res.body.token).to.be.a('string');
+            testToken = res.body.token;
+            testUserId = res.body.uid;
 
             done();
           });
@@ -67,7 +102,7 @@ describe('User test suite', () => {
     describe('Duplicate email', () => {
       it('should return error Object with a message and Status Code: 409', done => {
         const testUser = {
-          email: 'john@mail.com',
+          email: testEmail,
           password: '123456'
         };
 
@@ -146,11 +181,11 @@ describe('User test suite', () => {
     });
   });
 
-  describe('POST /login route test', () => {
+  describe('POST /login', () => {
     describe('User login', () => {
       it('should return an user Object and Status Code 200', done => {
         const credentials = {
-          email: 'john@mail.com',
+          email: testEmail,
           password: '123456'
         };
 
@@ -164,6 +199,8 @@ describe('User test suite', () => {
             expect(res).to.have.status(200);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.property('token');
+            expect(res.body).to.have.property('uid');
+            expect(res.body.token).to.be.a('string');
             expect(res.body.token).to.be.a('string');
 
             done();
@@ -201,7 +238,7 @@ describe('User test suite', () => {
     describe('Invalid email and/or password', () => {
       it('should return error Object with a message and Status Code: 400', done => {
         const credentials = {
-          email: 'john@mail.com',
+          email: testEmail,
           password: 'wrongpass'
         };
 
@@ -226,27 +263,44 @@ describe('User test suite', () => {
     });
   });
 
-  describe('GET /test route test', () => {
-    describe('Route error', () => {
-      it('should return error Object with Status Code: 500', done => {
+  describe ('/POST /logout', () => {
+    describe('User logout', () => {
+      it('should return message Object and Status Code: 200', done => {
         chai
           .request(app)
-          .get('/test')
-          .end(function(err, res){
+          .post('/logout')
+          .set('authorization', testToken)
+          .end(function(err, res) {
             expect(err).to.be.null;
 
-            expect(res).to.have.status(500);
+            expect(res).to.have.status(200);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.property('message');
             expect(res.body.message).to.be.a('string');
-            expect(res.body.message).to.match(
-              /(There\'s something wrong with the server, please try again later)/g
-            );
+            expect(res.body.message).to.match(/(Logged out)/g);
 
             done();
           });
-          
-      })
-    })
+      });
+    });
+
+    describe('Invalid authentication', () => {
+      it('should return error Object with Status Code: 401', done => {
+        chai
+          .request(app)
+          .get('/reservations')
+          .end(function(err, res) {
+            expect(err).to.be.null;
+
+            expect(res).to.have.status(401);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.be.a('string');
+            expect(res.body.message).to.match(/(Unauthenticated request)/g);
+
+            done();
+          });
+      });
+    });
   });
 });

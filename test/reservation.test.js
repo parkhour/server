@@ -1,9 +1,11 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../server');
-const testHelper = require('../helpers/testHelper');
 
-const { createUserToken, dropAll } = testHelper;
+const { 
+  createUserToken,
+  dropAll,
+} = require('../helpers/testHelper');
 
 const expect = chai.expect;
 chai.use(chaiHttp);

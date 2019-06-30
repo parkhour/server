@@ -1,10 +1,10 @@
 const cron = require('cron');
-const moment = require('moment');
-const { CronJob } = cron;
+// const moment = require('moment');
+// const { CronJob } = cron;
 
-exports.setCronTimer = ( time ) => {
+exports.setCronTimer = ( time, delay ) => {
   const doDate = new Date(time)
-  doDate.setSeconds(doDate.getSeconds()+5);
+  doDate.setSeconds(doDate.getSeconds() + delay);
   return doDate;
 } 
 
