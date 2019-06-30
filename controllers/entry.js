@@ -1,9 +1,12 @@
 const User = require('../models/User');
 
 const { createAccessToken } = require('../helpers/tokenHelper');
-const { verifyPassword } = require('../helpers/entryHelper');
 
 class EntryController {
+
+  static getTestErrorRoute(req, res, next) {
+    throw new Error('There\'s something wrong with the server, please try again later');
+  };
 
   static postUserRegister(req, res, next) {
     const {
@@ -39,16 +42,15 @@ class EntryController {
 
     User.findOne({ email })
       .then((user) => {
-        if(user && verifyPassword(password, user.password)) {
-          const accessToken = createAccessToken({
-            id: req.uid,
-            email: user.email,
-          });
+        const accessToken = createAccessToken({
+          id: req.uid,
+          email: user.email,
+        });
 
-          res.status(200).json({
-            token: accessToken,
-          });
-        }
+        res.status(200).json({
+          token: accessToken,
+        });
+        
       })
       .catch(next);
   };

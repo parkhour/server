@@ -225,4 +225,28 @@ describe('User test suite', () => {
       });
     });
   });
+
+  describe('GET /test route test', () => {
+    describe('Route error', () => {
+      it('should return error Object with Status Code: 500', done => {
+        chai
+          .request(app)
+          .get('/test')
+          .end(function(err, res){
+            expect(err).to.be.null;
+
+            expect(res).to.have.status(500);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.be.a('string');
+            expect(res.body.message).to.match(
+              /(There\'s something wrong with the server, please try again later)/g
+            );
+
+            done();
+          });
+          
+      })
+    })
+  });
 });

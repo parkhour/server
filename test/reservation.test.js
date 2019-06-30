@@ -29,7 +29,7 @@ after(done => {
   dropAll(done, testUserId, testRes);
 });
 
-describe.only('Reservation test suite', () => {
+describe('Reservation test suite', () => {
   describe('GET /reservation test', () => {
     describe('Get all user\'s reservations', () => {
       it('should return reservations Array with Status Code: 200', done => {

@@ -66,6 +66,7 @@ if(process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
 app.use('/', mainRoute);
 /* istanbul ignore else  */
 app.listen(port, () => {
+  /* istanbul ignore next  */
   if(process.env.NODE_ENV === 'development') {
     console.log(chalk.white(`Server is listening on port: ${chalk.white.bold(port)}\ntime: ${chalk.white.bold(moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a'))}`));
   } else {

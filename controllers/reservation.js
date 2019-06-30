@@ -21,9 +21,7 @@ class ReservationController {
         req.reservation = reservation;
         return next();
       })
-      .catch((err) => {
-        next(err);
-      });
+      .catch(next);
   };
 
   static getAllReservations(req, res, next) {
@@ -33,7 +31,6 @@ class ReservationController {
       .then((reservations) => {
         res.status(200).json(reservations);
       })
-      .catch(next);
   };
 };
 

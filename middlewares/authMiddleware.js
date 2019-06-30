@@ -10,9 +10,7 @@ const userAuthentication = (req, res, next) => {
         if(user) {
           req.authenticated = decode;
           return next();
-        } else {
-          throw new Error('User not found');
-        };
+        }
       })
       .catch(next)
   } else {

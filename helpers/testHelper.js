@@ -45,20 +45,20 @@ const dropUsers = done => {
   .catch(() => done());
 };
 
-const dropReservations = (done, userId, reservationId) => {
-  Reservation.deleteMany({})
-    .then(async () => {
-      try {
-        await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
-        await db.ref(`/test/reservations/${reservationId}`).remove();
-        done();
-      }
-      catch(err) {
-        console.log(err);
-      }
-    })
-    .catch(() => { done() })
-};
+// const dropReservations = (done, userId, reservationId) => {
+//   Reservation.deleteMany({})
+//     .then(async () => {
+//       try {
+//         await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
+//         await db.ref(`/test/reservations/${reservationId}`).remove();
+//         done();
+//       }
+//       catch(err) {
+//         console.log(err);
+//       }
+//     })
+//     .catch(() => { done() })
+// };
 
 const dropAll = async (done, userId, reservationId) => {
   User.deleteMany({}).exec();
@@ -75,14 +75,14 @@ const dropAll = async (done, userId, reservationId) => {
     done();
   }
   catch(err) {
-    console.log(err);
+   done();
   }
 
 }
 
 module.exports = {
   createUserToken,
-  dropReservations,
+  // dropReservations,
   dropUsers,
   dropAll,
 };
