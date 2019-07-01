@@ -6,6 +6,7 @@ const { createAccessToken } = require('../helpers/tokenHelper');
 class EntryController {
 
   static postCreateTestAdmin(req, res, next) {
+     /* istanbul ignore next */
     const {
       email,
       password,
