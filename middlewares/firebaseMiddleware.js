@@ -85,10 +85,11 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
    reservationId: _id,
  })
   .then(() => {
-    const jobDate = setCronTimer(new Date(moment(createdAt).valueOf()), 5);
+    const jobDate = setCronTimer(new Date(moment(createdAt).valueOf()), 1);
 
     new CronJob(jobDate, function() {
       this.stop();
+
     }, async function() {
       try{ 
         const snapshot = await db.ref(`/test/reservations/${_id}`).once('value');
@@ -105,7 +106,9 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
         });
        }
         
-      } catch(err) {
+      } 
+      /* istanbul ignore block */
+      catch(err) {
         next(err);
       }
         console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss", 'job\'s done'));
@@ -123,9 +126,6 @@ exports.firebaseGetReservationsData = (req, res, next) => {
   .then((snapshot) => {
     let data = [];
     snapshot.forEach((doc) => {
-      // if(doc.val().uid === id) {
-      //   data.push(doc.val())
-      // }
       if(doc.val().uid === id) {
         data.push(doc.val());
       }

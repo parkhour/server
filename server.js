@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 
 const mainRoute = require('./routes/web');
 
-mongoose.connect(dbURL, { useNewUrlParser: true });
+mongoose.connect(dbURL, { useNewUrlParser: true, useFindAndModify: false });
 /* istanbul ignore next */
 mongoose.connection.on('error', (error) => {
   console.log(error);

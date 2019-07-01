@@ -125,8 +125,10 @@ after(done => {
               'createdAt',
             );
             testRes = res.body._id;
+              setTimeout(() => {
+                done();
 
-            done();
+              }, 1800)
           });
       });
     });

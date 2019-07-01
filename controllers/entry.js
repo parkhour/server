@@ -5,6 +5,29 @@ const { createAccessToken } = require('../helpers/tokenHelper');
 
 class EntryController {
 
+  static postCreateTestAdmin(req, res, next) {
+    const {
+      email,
+      password,
+    } = req.body;
+
+    const newTestAdmin = new User({
+      email,
+      password,
+      role: 'admin',
+    })
+
+    newTestAdmin.save()
+      .then((user) => {
+        const adminToken = createAccessToken({
+          id: user._id,
+          role: user.role,
+        })
+        res.status(200).json(adminToken);
+      })
+      .catch(next);
+  }
+
   static getTestErrorRoute(req, res, next) {
     throw new Error('There\'s something wrong with the server, please try again later');
   };
