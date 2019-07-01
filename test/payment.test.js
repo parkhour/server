@@ -41,8 +41,8 @@ describe('Payment test suite', () => {
   });
   
   after((done) => {
-    dropAll(done, testUserId)
-    // dropAll(done, testUserId, testReservation._id)
+    // dropAll(done, testUserId)
+    dropAll(done, testUserId, testReservation._id)
   });
   
   describe('GET /payments', () => {
