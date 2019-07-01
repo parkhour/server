@@ -15,13 +15,24 @@ class PaymentController {
       .catch(next);
   };
 
-  static getAllPayments (req, res, next){
+  static getAllPayments (req, res, next) {
     Payment.find({})
       .then((payments) => {
         res.status(200).json(payments)
       })
       .catch(next);
   };
+
+  static patchEditPaymentById(req, res, next) {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    Payment.findOneAndUpdate({ _id: id}, { status }, {new: true })
+      .then((payment) => {
+        res.status(200).json(payment)
+      })
+      .catch(next);
+  }
   
 };
 

@@ -14,11 +14,12 @@ let testEmail =  randomEmail();
 let testUserId;
 let testToken;
 
-after(done => {
-  dropUsers(done, testUserId);
-});
 
 describe('User test suite', () => {
+  after(done => {
+    dropUsers(done, testUserId);
+  });
+  
   describe('GET /test', () => {
     describe('Route error', () => {
       it('should return error Object with Status Code: 500', done => {

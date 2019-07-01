@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Reservation = require('./Reservation');
 const { calculateParkingCharge } = require('../helpers/timeHelper');
+const { db } = require('../config/firebase');
 const Schema = mongoose.Schema;
 
 const paymentSchema = new Schema({
@@ -14,6 +15,10 @@ const paymentSchema = new Schema({
   parkingStart: Date,
   parkingEnd: Date,
   totalCharge: String,
+  status: {
+    type: String,
+    default: 'waiting',
+  }
 });
 
 paymentSchema.pre('save', function(next) {
@@ -28,6 +33,7 @@ paymentSchema.pre('save', function(next) {
       this.parkingStart = reservation.createdAt;
       this.parkingEnd = new Date();
       this.totalCharge = calculateParkingCharge(reservation.createdAt);
+ 
       next();
     })
     .catch(next);

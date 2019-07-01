@@ -115,3 +115,22 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
   })
   .catch(next);
 };
+
+exports.firebaseGetReservationsData = (req, res, next) => {
+  const { id } = req.authenticated;
+  
+  db.ref(`test/reservations`).once('value')
+  .then((snapshot) => {
+    let data = [];
+    snapshot.forEach((doc) => {
+      // if(doc.val().uid === id) {
+      //   data.push(doc.val())
+      // }
+      if(doc.val().uid === id) {
+        data.push(doc.val());
+      }
+    })
+    req.data = data;
+    next();
+  })
+}

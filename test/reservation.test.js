@@ -14,6 +14,8 @@ let testToken;
 let testRes;
 let testUserId;
 
+describe('Reservation test suite', () => {
+
 before(done => {
   createUserToken()
     .then(([token, userId]) => {
@@ -31,7 +33,6 @@ after(done => {
   dropAll(done, testUserId, testRes);
 });
 
-describe('Reservation test suite', () => {
   describe('GET /reservation test', () => {
     describe('Get all user\'s reservations', () => {
       it('should return reservations Array with Status Code: 200', done => {

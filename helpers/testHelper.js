@@ -70,7 +70,7 @@ const createTestReservation = (userId) => {
   }
   
   const testReservation = new Reservation(data);
-  return new Promise(resolve, reject => {
+  return new Promise(resolve => {
     testReservation.save()
       // .then((reservation) => resolve(reservation))
       .then((reservation) => {
@@ -87,7 +87,7 @@ const createTestReservation = (userId) => {
         })
         resolve(reservation)
       })
-      .catch((err) => reject(err));
+      .catch((err) => resolve(err));
   })
 }
 

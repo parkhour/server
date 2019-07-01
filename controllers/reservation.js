@@ -29,13 +29,8 @@ class ReservationController {
   };
 
   static getAllReservations(req, res, next) {
-    const{ id } = req.authenticated;
-
-    Reservation.find({ uid: id })
-      .then((reservations) => {
-        res.status(200).json(reservations);
-      })
-  };
+    res.status(200).json(req.data);
+  }
 };
 
 module.exports = ReservationController;
