@@ -1,8 +1,6 @@
 # server
 parkhour server
 
-# e-commerce
-
 ## API-Documentation
 
 |No|Route|HTTP Method|Request|Response(success)|Description|
