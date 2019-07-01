@@ -39,6 +39,18 @@ paymentSchema.pre('save', function(next) {
     .catch(next);
 });
 
+paymentSchema.post('findOneAndUpdate', function(doc) {
+  const paymentId = doc._id;
+  const totalCharge = doc.totalCharge;
+  
+  db.ref(`test/reservations/${doc.reservationId}`).update({
+    paymentId,
+    totalCharge,
+    status: 'completed',
+  });
+  
+})
+
 const Payment = mongoose.model('Payment', paymentSchema);
 
 module.exports = Payment;
