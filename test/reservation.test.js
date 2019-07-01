@@ -98,7 +98,9 @@ describe('Reservation test suite', () => {
           mallId: '01',
           parkId: 1,
           uid: testUserId,
-          status: 'waiting'
+          status: 'waiting',
+          licensePlate: 'AB 123 CD',
+          mallName: 'sunflower'
         };
 
         chai
@@ -115,8 +117,10 @@ describe('Reservation test suite', () => {
               '_id',
               'mallId',
               'parkId',
+              'mallName',
               'uid',
               'status',
+              'licensePlate',
               'createdAt',
             );
             testRes = res.body._id;
@@ -126,13 +130,47 @@ describe('Reservation test suite', () => {
       });
     });
 
+    describe('Empty license plate', () => { 
+      it('should return error Object with Status Code: 400', done => {
+        const testReservation = {
+          mallId: '01',
+          parkId: 1,
+          uid: testUserId,
+          status: 'waiting',
+          licensePlate: ''
+        };
+
+        chai
+          .request(app)
+          .post('/reservations')
+          .set('authorization', testToken)
+          .send(testReservation)
+          .end(function(err, res) {
+            expect(err).to.be.null;
+
+            expect(res).to.have.status(400);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.be.a('string');
+            expect(res.body.message).to.match(/(License plate cannot be empty)/g);
+
+            done();
+          });
+        });
+    });
+    // REGEX TEST
+    // describe('Invalid license plate', () => {
+
+    // });
+
     describe('Invalid authentication', () => {
       it('should return error Object with Status Code: 401', done => {
         const testReservation = {
           mallId: '01',
           parkId: 1,
           uid: 'noId',
-          status: 'waiting'
+          status: 'waiting',
+          licensePlate: 'AB 123 CD'
         };
 
         chai
@@ -159,7 +197,8 @@ describe('Reservation test suite', () => {
           mallId: '01',
           parkId: 1,
           uid: 'wrongUid',
-          status: 'waiting'
+          status: 'waiting',
+          licensePlate: 'AB 123 CD'
         };
 
         chai

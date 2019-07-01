@@ -15,6 +15,13 @@ const errorCode = errorMessage => {
   switch (errorMessage) {
     case 'Email/password cannot be empty':
       return 400;
+
+    case 'Reservation not found':
+      return 400;
+
+    case 'Unauthorized request':
+      return 401;
+      
     default:
       return 500;
   }

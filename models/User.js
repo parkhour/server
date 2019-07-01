@@ -11,7 +11,8 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true],
-  }
+  },
+  role: String,
 }, { timestamps: true });
 
 userSchema.pre('save', function(next) {

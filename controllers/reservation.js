@@ -6,6 +6,8 @@ class ReservationController {
     const { 
       parkId,
       mallId,
+      licensePlate,
+      mallName
     } = req.body;
     const { id } = req.authenticated;
     
@@ -13,13 +15,15 @@ class ReservationController {
       mallId,
       parkId,
       uid: id,
+      licensePlate,
+      mallName,
     });
 
     newReservation
       .save()
       .then((reservation) => {
         req.reservation = reservation;
-        return next();
+        next();
       })
       .catch(next);
   };

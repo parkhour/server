@@ -18,6 +18,24 @@ const userAuthentication = (req, res, next) => {
   };
 };
 
+const adminAuthentication = (req, res, next) => {
+  if(req.headers.hasOwnProperty('authorization')) {
+    const decode = verifyAccessToken(req.headers.authorization);
+
+    User.findOne({ role: decode.role })
+      .then((user) => {
+        if(user && user.role === 'admin') {
+          req.authenticated = decode;
+          return next();
+        } else {
+          throw new Error('Unauthorized request')
+        }
+      })
+      .catch(next)
+  } else {
+    res.status(401).json({ message: 'Bad request, please login again' });
+  }
+}
 // const userAuthorization = (req, res, next) => {
 //   const { uid } = req.authenticated;
 
@@ -26,5 +44,6 @@ const userAuthentication = (req, res, next) => {
 
 module.exports = {
   userAuthentication,
+  adminAuthentication,
   // userAuthorization,
 };

@@ -53,6 +53,8 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
     parkId,
     status,
     createdAt,
+    licensePlate,
+    mallName,
   } = req.reservation;
 
   await db.ref('/test/reservations').update({
@@ -61,6 +63,8 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
      parkId,
      uid,
      status,
+     licensePlate,
+     mallName,
      createdAt : moment(createdAt).valueOf(),
    },
   })
@@ -71,6 +75,7 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
       parkId,
       uid,
       status,
+      mallName,
       createdAt : moment(createdAt).valueOf(),
     }
   })
