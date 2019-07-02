@@ -106,8 +106,7 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
         });
        }
         
-      } 
-      /* istanbul ignore block */
+      }
       catch(err) {
         next(err);
       }

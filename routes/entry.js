@@ -10,15 +10,15 @@ const {
   postUserLogin,
   postUserRegister,
   postUserLogout,
-  postCreateTestAdmin
+  // postCreateTestAdmin
 } = require('../controllers/entry');
 
 const router = express.Router();
 
 router.post('/register', firebaseAuth, postUserRegister);
-router.post('/admin-reg', firebaseAuth, postCreateTestAdmin);
 router.post('/login', firebaseAuth, postUserLogin);
 router.post('/logout', firebaseSignOut, postUserLogout);
 router.get('/test', getTestErrorRoute);
+// router.post('/admin-reg', firebaseAuth, postCreateTestAdmin);
 
 module.exports = router;
