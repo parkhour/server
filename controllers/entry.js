@@ -1,32 +1,52 @@
 const User = require('../models/User');
 
 const { createAccessToken } = require('../helpers/tokenHelper');
-// const { verifyPassword } = require('../helpers/entryHelper');
+const { verifyPassword } = require('../helpers/entryHelper');
 
 class EntryController {
 
-  // static postCreateTestAdmin(req, res, next) {
-  //   const {
-  //     email,
-  //     password,
-  //   } = req.body;
+  static postCreateTestAdmin(req, res, next) {
+    const {
+      email,
+      password,
+    } = req.body;
 
-  //   const newTestAdmin = new User({
-  //     email,
-  //     password,
-  //     role: 'admin',
-  //   })
+    const newTestAdmin = new User({
+      email,
+      password,
+      role: 'admin',
+    })
 
-  //   newTestAdmin.save()
-  //     .then((user) => {
-  //       const adminToken = createAccessToken({
-  //         id: user._id,
-  //         role: user.role,
-  //       })
-  //       res.status(200).json(adminToken);
-  //     })
-  //     .catch(next);
-  // }
+    newTestAdmin.save()
+      .then((user) => {
+        const adminToken = createAccessToken({
+          id: user._id,
+          role: user.role,
+        })
+        res.status(200).json(adminToken);
+      })
+      .catch(next);
+  }
+
+  static postLoginTestAdmin(req, res, next) {
+    const {
+      email,
+      password,
+    } = req.body;
+
+    User.findOne({ email })
+      .then((user) => {
+        if(user && verifyPassword(password, user.password)) {
+          const adminToken = createAccessToken({
+            id: user._id,
+            role: user.role,
+          })
+          res.status(200).json(adminToken);
+        } else throw new Error('Wrong email/password')
+      })
+      .catch(next);
+    
+  }
 
   static getTestErrorRoute(req, res, next) {
     throw new Error('There\'s something wrong with the server, please try again later');
