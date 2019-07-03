@@ -110,7 +110,7 @@ exports.firebaseCreateReservation =  async (req, res, next) => {
       catch(err) {
         next(err);
       }
-        console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss", 'job\'s done'));
+        // console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss", 'job\'s done'));
     }, true, 'Asia/Jakarta');
 
     res.status(201).json(req.reservation)
@@ -125,6 +125,7 @@ exports.firebaseGetReservationsData = (req, res, next) => {
   .then((snapshot) => {
     let data = [];
     snapshot.forEach((doc) => {
+      /* istanbul ignore next */
       if(doc.val().uid === id) {
         data.push(doc.val());
       }
@@ -133,3 +134,4 @@ exports.firebaseGetReservationsData = (req, res, next) => {
     next();
   })
 }
+

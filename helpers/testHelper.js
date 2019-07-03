@@ -2,6 +2,7 @@
 const moment = require('moment');
 const User = require('../models/User');
 const Reservation = require('../models/Reservation');
+const Payment = require('../models/Payment');
 const { createAccessToken } = require('../helpers/tokenHelper');
 const { auth, db } = require('../config/firebase');
 const { adminAuth } = require('../config/admin');
@@ -106,6 +107,7 @@ const dropUsers = async (done, userId) => {
 const dropAll = async (done, userId, reservationId) => {
   User.deleteMany({}).exec();
   Reservation.deleteMany({}).exec();
+  Payment.deleteMany({}).exec();
 
   try {
     // await db.ref(`/test/reservations/`).set({reserve: 'this'});

@@ -1,3 +1,4 @@
+/* istanbul ignore file*/
 const chalk = require('chalk');
 const cors = require('cors');
 const dotenv = require('dotenv');
