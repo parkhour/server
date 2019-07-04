@@ -36,14 +36,8 @@ const adminAuthentication = (req, res, next) => {
     res.status(401).json({ message: 'Bad request, please login again' });
   }
 }
-// const userAuthorization = (req, res, next) => {
-//   const { uid } = req.authenticated;
-
-
-// };
 
 module.exports = {
   userAuthentication,
   adminAuthentication,
-  // userAuthorization,
 };

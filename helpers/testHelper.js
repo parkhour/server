@@ -73,7 +73,6 @@ const createTestReservation = (userId) => {
   const testReservation = new Reservation(data);
   return new Promise(resolve => {
     testReservation.save()
-      // .then((reservation) => resolve(reservation))
       .then((reservation) => {
         db.ref('/test/reservations').update({
           [reservation._id]: {
@@ -110,7 +109,6 @@ const dropAll = async (done, userId, reservationId) => {
   Payment.deleteMany({}).exec();
 
   try {
-    // await db.ref(`/test/reservations/`).set({reserve: 'this'});
     await adminAuth.deleteUser(userId);
     await db.ref(`/test/user/${userId}/reservations/${reservationId}`).remove();
     await db.ref(`/test/reservations/${reservationId}`).remove();

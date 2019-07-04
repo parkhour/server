@@ -1,6 +1,4 @@
-const cron = require('cron');
 const moment = require('moment');
-// const { CronJob } = cron;
 
 exports.setCronTimer = ( time, delay ) => {
   const doDate = new Date(time)
@@ -18,9 +16,3 @@ exports.calculateParkingCharge = (startTime) => {
     return ((diff/60).toFixed(1) * rate | 0).toLocaleString('id',{ style: 'currency', currency: 'IDR' });
   };
 };
-
-// exports.cronJobReservation = ( time, callback ) => {
-// new CronJob(time, callback, function() {
-//       console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"), 'job\'s done');
-//   }, true, 'Asia/Jakarta');
-// };

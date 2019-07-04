@@ -58,7 +58,7 @@ describe('User test suite', () => {
           .send(testUser)
           .end(function(err, res) {
             expect(err).to.be.null;
-            // console.log(res.body.uid);
+            
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.property('token');

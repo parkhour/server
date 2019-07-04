@@ -41,7 +41,6 @@ describe('Payment test suite', () => {
   });
   
   after((done) => {
-    // dropAll(done, testUserId)
     dropAll(done, testUserId, testReservation._id)
   });
   

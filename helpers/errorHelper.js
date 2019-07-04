@@ -57,7 +57,6 @@ const handler = error => {
   }
   else {
     errorObj.message = error.message
-    // errorObj.message = 'There\'s something wrong with the server, please try again later' ;
     code = 500;
   }
   errorObj.code = code;
